@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home & Solar System</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  /* ===================== Body & Canvas ===================== */
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    height: 100vh;
+    text-align: center;
+    overflow: hidden;
+    background: black;
+  }
+  canvas#stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -5;
+  }
+
+  /* ===================== Home ===================== */
+  #home {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .welcome {
+    font-size: 50px;
+    color: #fff;
+    text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 20px #fff,0 0 40px cyan;
+    animation: neonGlow 1.5s ease-in-out infinite alternate;
+    margin-bottom: 20px;
+  }
+  @keyframes neonGlow {
+    0% { text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 20px #fff,0 0 40px cyan; }
+    100% { text-shadow: 0 0 10px #fff,0 0 20px #fff,0 0 40px #fff,0 0 60px cyan; }
+  }
+  .name-input input {
+    padding: 10px 15px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    box-shadow: 0 0 10px cyan;
+    transition: box-shadow 0.3s;
+  }
+  .name-input input:focus { box-shadow: 0 0 20px cyan,0 0 30px cyan; }
+  .socials {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    opacity: 0;
+    animation: fadeIn 2s forwards 1s;
+  }
+  .socials a, .socials button {
+    font-size: 40px;
+    color: white;
+    text-decoration: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s, text-shadow 0.3s;
+  }
+  .socials a:hover, .socials button:hover {
+    transform: scale(1.3);
+    text-shadow: 0 0 20px cyan,0 0 40px cyan;
+  }
+  .socials button {
+    font-size: 20px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px cyan;
+    background: rgba(0,0,0,0.5);
+  }
+  @keyframes fadeIn {
+    from {opacity:0; transform:translateY(20px);}
+    to {opacity:1; transform:translateY(0);}
+  }
+  .globe {
+    position: absolute;
+    bottom: 50px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/600px-The_Earth_seen_from_Apollo_17.jpg') no-repeat center/cover;
+    animation: rotateGlobe 20s linear infinite, moveGlobe 25s ease-in-out infinite alternate;
+    box-shadow: 0 0 20px rgba(0,200,255,0.6);
+    transition: transform 0.3s, box-shadow 0.3s;
+    z-index:1;
+  }
+  .globe:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 40px cyan,0 0 60px cyan;
+  }
+  @keyframes rotateGlobe { 0% {transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+  @keyframes moveGlobe {
+    0%{left:10%; bottom:40px;}
+    25%{left:30%; bottom:80px;}
+    50%{left:50%; bottom:60px;}
+    75%{left:70%; bottom:100px;}
+    100%{left:90%; bottom:50px;}
+  }
+
+  /* ===================== Solar System ===================== */
+  #solar-system {
+    display: none;
+    overflow-x: auto;
+    white-space: nowrap;
+    height: 100vh;
+    padding-top: 50px;
+    color: white;
+  }
+  .sun, .flare { position: fixed; z-index: -4; }
+  .sun {
+    top:-100px; left:-100px;
+    width: 400px; height:400px;
+    background: radial-gradient(circle, orange 60%, darkred 100%);
+    border-radius: 50%;
+    box-shadow:0 0 60px orange,0 0 120px red,0 0 180px darkorange;
+  }
+  .flare {
+    top:-200px; left:-200px;
+    width:600px; height:600px;
+    background: radial-gradient(circle, rgba(255,165,0,0.5) 20%, rgba(255,69,0,0) 70%);
+    border-radius: 50%;
+    animation: flarePulse 6s ease-in-out infinite;
+  }
+  @keyframes flarePulse {0%,100%{transform:scale(1);opacity:0.6;}50%{transform:scale(1.2);opacity:0.9;}}
+  #solar-title { font-size: 2rem; text-shadow: 0 0 15px white,0 0 30px cyan; margin-bottom: 30px; }
+  .solar-system { display: flex; align-items: center; gap: 80px; padding-left: 400px; }
+  .planet { position: relative; text-align: center; cursor: pointer; transition: transform 0.3s; display: inline-block; }
+  .planet img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; animation: rotatePlanet 30s linear infinite; transition: transform 0.3s, box-shadow 0.3s; }
+  .planet:hover img { transform: scale(1.4); box-shadow: 0 0 30px white; }
+  .tooltip { position: absolute; top: 130%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; width: max-content; display: none; white-space: normal; }
+  .planet:hover .tooltip { display: block; }
+  @keyframes rotatePlanet {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+  <!-- Canvas bintang -->
+  <canvas id="stars"></canvas>
+
+  <!-- HOME -->
+  <div id="home">
+    <div class="welcome">Welcome my friend</div>
+    <div class="name-input">
+      <input type="text" placeholder="Masukkan nama kamu" id="username">
+    </div>
+    <div class="socials">
+      <a href="https://instagram.com/wafa_ashdqy" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/628816657044" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      <button id="btn-lanjut">Lanjutkan</button>
+    </div>
+    <div class="globe"></div>
+  </div>
+
+  <!-- SOLAR SYSTEM -->
+  <div id="solar-system">
+    <h1 id="solar-title">Solar System of Abi Sidqul Wafa</h1>
+    <div class="sun"></div>
+    <div class="flare"></div>
+    <div class="solar-system">
+      <div class="planet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Mercury_in_true_color.jpg" alt="Mercury">
+        <div class="tooltip">Mercury: Wafa suka tantangan kecil 🔢</div>
+      </div>
+      <div class="planet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Venus-real_color.jpg" alt="Venus">
+        <div class="tooltip">Venus: Punya jiwa sabar 💫</div>
+      </div>
+      <div class="planet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg" alt="Earth">
+        <div class="tooltip">Earth: Kuliah di STEKOM 🌍</div>
+      </div>
+      <div class="planet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg" alt="Mars">
+        <div class="tooltip">Mars: Berani tapi belajar melepas masa lalu 🔥</div>
+      </div>
+      <div class="planet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter.jpg" alt="Jupiter">
+        <div class="tooltip">Jupiter: Punya impian besar 🚀</div>
+      </div>
+      <div class="planet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Saturn_during_Equinox.jpg" alt="Saturn">
+        <div class="tooltip">Saturn: Hidupnya penuh lingkaran 🪐</div>
+      </div>
+      <div class="planet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3d/Uranus2.jpg" alt="Uranus">
+        <div class="tooltip">Uranus: Suka eksplor hal baru 🌐</div>
+      </div>
+      <div class="planet">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Neptune_Full.jpg" alt="Neptune">
+        <div class="tooltip">Neptune: Dalam hatinya ada kedalaman 🌊</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ===================== Stars Canvas =====================
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', ()=>{ width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
+
+  const stars = [];
+  const numStars = 150;
+  for(let i=0;i<numStars;i++){
+    stars.push({x:Math.random()*width, y:Math.random()*height, radius:Math.random()*1.2, speed:Math.random()*0.2});
+  }
+  const shootingStars = [];
+
+  function createShootingStar() {
+    if(Math.random()<0.02){
+      shootingStars.push({x:Math.random()*width, y:0, len:Math.random()*80+50, speedX:Math.random()*8+4, speedY:Math.random()*4+2});
+    }
+  }
+
+  function drawStars(){
+    ctx.clearRect(0,0,width,height);
+    ctx.fillStyle="white";
+    stars.forEach(star=>{
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius,0,Math.PI*2);
+      ctx.fill();
+      star.y+=star.speed;
+      if(star.y>height){ star.y=0; star.x=Math.random()*width; }
+    });
+    createShootingStar();
+    shootingStars.forEach((s,i)=>{
+      ctx.beginPath();
+      ctx.moveTo(s.x,s.y);
+      ctx.lineTo(s.x+s.len, s.y+s.len/4);
+      ctx.strokeStyle='white';
+      ctx.lineWidth=2;
+      ctx.stroke();
+      s.x+=s.speedX; s.y+=s.speedY;
+      if(s.y>height || s.x>width) shootingStars.splice(i,1);
+    });
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+
+  // ===================== Lanjutkan ke solar system =====================
+  const btnLanjut = document.getElementById('btn-lanjut');
+  btnLanjut.addEventListener('click', ()=>{
+    const username = document.getElementById('username').value.trim();
+    if(username===""){ alert("Tolong masukkan namamu dulu!"); return; }
+    document.getElementById('solar-title').textContent = "Solar System of Abi Sidqul Wafa — Welcome, " + username;
+    document.getElementById('home').style.display='none';
+    document.getElementById('solar-system').style.display='block';
+  });
+</script>
+</body>
+</html>
